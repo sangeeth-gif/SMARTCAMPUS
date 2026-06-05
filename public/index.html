@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCampus Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div id="login-section" class="card fade-in">
+            <div class="login-header">
+                <i class="fa-solid fa-graduation-cap logo-icon"></i>
+                <h1>SmartCampus</h1>
+                <p>Welcome back. Please log in to your account.</p>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fa-solid fa-id-badge"></i> Login As</label>
+                <select id="role" class="input-modern">
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="admin">Administrator</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label><i class="fa-solid fa-user"></i> Username</label>
+                <input type="text" id="username" class="input-modern" placeholder="Enter your username">
+            </div>
+            <div class="form-group">
+                <label><i class="fa-solid fa-lock"></i> Password</label>
+                <input type="password" id="password" class="input-modern" placeholder="Enter your password">
+            </div>
+            <button onclick="login()" class="btn-primary">Sign In <i class="fa-solid fa-arrow-right"></i></button>
+            <p id="error-msg" class="error"></p>
+            
+            <div class="login-footer">
+                <a href="javascript:void(0)" onclick="showResetForm()">Forgot your password?</a>
+            </div>
+        </div>
+
+        <div id="reset-section" class="card hidden fade-in">
+            <div class="login-header">
+                <i class="fa-solid fa-shield-halved logo-icon" style="color: #c5a880;"></i>
+                <h2>Account Recovery</h2>
+                <p>Enter your details and secret Recovery PIN.</p>
+            </div>
+            
+            <div class="form-group">
+                <label>Account Role</label>
+                <select id="reset-role" class="input-modern">
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="admin">Administrator</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="reset-username" class="input-modern" placeholder="Enter your username">
+            </div>
+            <div class="form-group">
+                <label>Recovery PIN</label>
+                <input type="text" id="reset-pin" class="input-modern" placeholder="Enter 4-digit secret PIN">
+            </div>
+            <div class="form-group">
+                <label>New Password</label>
+                <input type="password" id="reset-new-password" class="input-modern" placeholder="Enter new password">
+            </div>
+            
+            <button onclick="resetPassword()" class="btn-success">Update Password</button>
+            <button onclick="goBack()" class="btn-secondary" style="margin-top: 10px;">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </button>
+            <p id="reset-msg" class="message"></p>
+        </div>
+
+        <div id="student-dashboard" class="dashboard hidden fade-in">
+            <div class="top-nav">
+                <div class="nav-brand">
+                    <button onclick="goBack()" class="btn-nav-back" title="Go Back"><i class="fa-solid fa-arrow-left"></i></button>
+                    <i class="fa-solid fa-graduation-cap"></i> SmartCampus
+                </div>
+                <div class="nav-user">
+                    <span><i class="fa-regular fa-user-circle"></i> <span id="student-name"></span></span>
+                    <button onclick="logout()" class="btn-logout"><i class="fa-solid fa-power-off"></i></button>
+                </div>
+            </div>
+            
+            <div class="dashboard-grid">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-book-open"></i> My Academics</h3>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <span class="stat-label">Attendance</span>
+                            <span class="stat-value" id="student-attendance">--</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Fee Status</span>
+                            <span class="stat-value" id="student-fees">--</span>
+                        </div>
+                    </div>
+                    <h4 class="sub-heading">Current Grades</h4>
+                    <ul id="student-marks" class="beautiful-list"></ul>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-bullhorn"></i> Campus Noticeboard</h3>
+                    </div>
+                    <ul id="student-events-list" class="beautiful-list events"></ul>
+                </div>
+
+                <div class="panel full-width">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-folder-open"></i> Download Study Materials</h3>
+                    </div>
+                    <ul id="student-files-list" class="beautiful-list"></ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="teacher-dashboard" class="dashboard hidden fade-in">
+            <div class="top-nav">
+                <div class="nav-brand">
+                    <button onclick="goBack()" class="btn-nav-back" title="Go Back"><i class="fa-solid fa-arrow-left"></i></button>
+                    <i class="fa-solid fa-chalkboard-user"></i> Teacher Portal
+                </div>
+                <button onclick="logout()" class="btn-logout"><i class="fa-solid fa-power-off"></i> Logout</button>
+            </div>
+            
+            <div class="dashboard-grid">
+                <div class="panel full-width">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-pen-to-square"></i> Manage Student Grades</h3>
+                    </div>
+                    <div class="table-container">
+                        <table id="teacher-students-table" class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Math</th>
+                                    <th>Science</th>
+                                    <th>Attendance %</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="teacher-students-list"></tbody>
+                        </table>
+                    </div>
+                    <p id="teacher-msg" class="message"></p>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-cloud-arrow-up"></i> Upload Study Material</h3>
+                    </div>
+                    <div class="form-group">
+                        <label>Material Title (e.g., Chapter 1 Notes)</label>
+                        <input type="text" id="upload-title" class="input-modern" placeholder="Enter title...">
+                    </div>
+                    <div class="form-group">
+                        <label>Select File (PDF, DOCX, PNG)</label>
+                        <input type="file" id="upload-file" class="input-modern" style="padding: 10px;">
+                    </div>
+                    <button onclick="uploadMaterial()" class="btn-primary"><i class="fa-solid fa-upload"></i> Upload to Server</button>
+                    <p id="upload-msg" class="message"></p>
+                    
+                    <h4 class="sub-heading" style="margin-top: 20px;">Currently Uploaded Files</h4>
+                    <ul id="teacher-files-list" class="beautiful-list"></ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="admin-dashboard" class="dashboard hidden fade-in">
+            <div class="top-nav">
+                <div class="nav-brand">
+                    <button onclick="goBack()" class="btn-nav-back" title="Go Back"><i class="fa-solid fa-arrow-left"></i></button>
+                    <i class="fa-solid fa-building-columns"></i> Admin Control Panel
+                </div>
+                <button onclick="logout()" class="btn-logout"><i class="fa-solid fa-power-off"></i> Logout</button>
+            </div>
+            
+            <div class="dashboard-grid admin-grid">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-user-plus"></i> Add Student</h3>
+                    </div>
+                    <input type="text" id="new-student-name" class="input-modern" placeholder="Full Name">
+                    <input type="text" id="new-student-username" class="input-modern" placeholder="Username">
+                    <input type="password" id="new-student-password" class="input-modern" placeholder="Password">
+                    <input type="text" id="new-student-pin" class="input-modern" placeholder="Recovery PIN (e.g. 1234)">
+                    <button onclick="createNewStudent()" class="btn-success">Create Student</button>
+                    <p id="admin-msg" class="message"></p>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-chalkboard-user"></i> Add Teacher</h3>
+                    </div>
+                    <input type="text" id="new-teacher-name" class="input-modern" placeholder="Full Name">
+                    <input type="text" id="new-teacher-username" class="input-modern" placeholder="Username">
+                    <input type="password" id="new-teacher-password" class="input-modern" placeholder="Password">
+                    <input type="text" id="new-teacher-pin" class="input-modern" placeholder="Recovery PIN (e.g. 1234)">
+                    <button onclick="createNewTeacher()" class="btn-primary">Create Teacher</button>
+                    <p id="admin-teacher-msg" class="message"></p>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3><i class="fa-regular fa-calendar-plus"></i> Announce Event</h3>
+                    </div>
+                    <input type="text" id="new-event-title" class="input-modern" placeholder="Event Title">
+                    <input type="text" id="new-event-date" class="input-modern" placeholder="Date (e.g. Oct 15)">
+                    <button onclick="createNewEvent()" class="btn-accent">Publish Event</button>
+                    <p id="event-msg" class="message"></p>
+                    <h4 class="sub-heading" style="margin-top: 15px;">Live Events:</h4>
+                    <ul id="admin-events-list" class="beautiful-list events small"></ul>
+                </div>
+
+                <div class="panel full-width">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-users-gear"></i> Master User Directory</h3>
+                    </div>
+                    <div class="table-container">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Username</th>
+                                    <th>Role</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-users-list"></tbody>
+                        </table>
+                    </div>
+                    <p id="admin-delete-msg" class="message"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
